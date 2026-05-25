@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background: #0f0f1a; color: white; padding: 48px 32px; min-height: 100vh; }
+  .header { text-align: center; margin-bottom: 56px; }
+  .header h1 { font-size: 28px; font-weight: 700; background: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px; letter-spacing: -0.5px; }
+  .header p { font-size: 14px; color: #6b7280; }
+  .legend { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 48px; }
+  .legend-item { display: flex; align-items: center; gap: 7px; font-size: 12px; color: #9ca3af; font-weight: 500; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 3px; }
+  .timeline-wrap { overflow-x: auto; padding-bottom: 24px; }
+  .timeline { display: flex; align-items: flex-start; gap: 0; min-width: max-content; padding: 0 8px; }
+  .phase-col { display: flex; flex-direction: column; align-items: center; width: 200px; flex-shrink: 0; }
+  .phase-pill { border-radius: 24px; padding: 8px 16px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; white-space: nowrap; margin-bottom: 20px; }
+  .phase-manual { background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; box-shadow: 0 4px 20px rgba(124,58,237,0.4); }
+  .phase-pre7   { background: linear-gradient(135deg, #1d4ed8, #3b82f6); color: white; box-shadow: 0 4px 20px rgba(59,130,246,0.4); }
+  .phase-pre5   { background: linear-gradient(135deg, #0369a1, #0ea5e9); color: white; box-shadow: 0 4px 20px rgba(14,165,233,0.4); }
+  .phase-pre4   { background: linear-gradient(135deg, #0f766e, #14b8a6); color: white; box-shadow: 0 4px 20px rgba(20,184,166,0.4); }
+  .phase-day1   { background: linear-gradient(135deg, #15803d, #22c55e); color: white; box-shadow: 0 4px 20px rgba(34,197,94,0.4); }
+  .phase-post5  { background: linear-gradient(135deg, #a16207, #eab308); color: white; box-shadow: 0 4px 20px rgba(234,179,8,0.4); }
+  .phase-post30 { background: linear-gradient(135deg, #c2410c, #f97316); color: white; box-shadow: 0 4px 20px rgba(249,115,22,0.4); }
+  .phase-post60 { background: linear-gradient(135deg, #be123c, #f43f5e); color: white; box-shadow: 0 4px 20px rgba(244,63,94,0.4); }
+  .phase-post90 { background: linear-gradient(135deg, #9f1239, #e11d48); color: white; box-shadow: 0 4px 20px rgba(225,29,72,0.4); }
+  .tasks { display: flex; flex-direction: column; gap: 8px; width: 184px; }
+  .task-card { background: #1a1a2e; border: 1px solid #2d2d44; border-radius: 10px; padding: 10px 12px; transition: transform 0.15s, box-shadow 0.15s; cursor: default; }
+  .task-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); border-color: #4a4a6a; }
+  .task-type-row { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; }
+  .type-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .type-label { font-size: 9.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; }
+  .task-title { font-size: 12px; font-weight: 500; color: #e2e8f0; line-height: 1.4; margin-bottom: 6px; }
+  .assignee-row { display: flex; flex-wrap: wrap; gap: 4px; }
+  .assignee-badge { font-size: 9.5px; font-weight: 500; padding: 2px 6px; border-radius: 12px; }
+  .email-dot { background: #60a5fa; } .email-label { color: #60a5fa; } .email-card { border-left: 3px solid #60a5fa; }
+  .task-dot-c { background: #34d399; } .task-label { color: #34d399; } .task-card-c { border-left: 3px solid #34d399; }
+  .cal-dot { background: #a78bfa; } .cal-label { color: #a78bfa; } .cal-card { border-left: 3px solid #a78bfa; }
+  .fb-dot { background: #fb923c; } .fb-label { color: #fb923c; } .fb-card { border-left: 3px solid #fb923c; }
+  .ab-manager { background: rgba(234,179,8,0.15); color: #fbbf24; }
+  .ab-hrbp { background: rgba(52,211,153,0.15); color: #34d399; }
+  .ab-coord { background: rgba(96,165,250,0.15); color: #60a5fa; }
+  .ab-employee { background: rgba(244,114,182,0.15); color: #f472b6; }
+  .ab-ta { background: rgba(167,139,250,0.15); color: #a78bfa; }
+  .ab-han { background: rgba(248,113,113,0.15); color: #f87171; }
+  .ab-kw { background: rgba(251,191,36,0.15); color: #fbbf24; }
+  .ab-payroll { background: rgba(249,115,22,0.15); color: #f97316; }
+  .arrow-wrap { display: flex; align-items: flex-start; padding-top: 16px; flex-shrink: 0; }
+  .arrow-line { width: 28px; height: 2px; background: linear-gradient(90deg, #2d2d44, #4a4a6a); border-radius: 1px; }
+  .arrow-head { width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 8px solid #4a4a6a; margin-left: 20px; margin-top: -8px; }
+  .kw-tag { font-size: 9px; font-weight: 600; background: rgba(251,191,36,0.15); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); padding: 1px 5px; border-radius: 8px; margin-left: 4px; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>🏢 CA Office Staff Onboarding Flow</h1>
+  <p>HiBob task timeline — from hire to 90-day check-in</p>
+</div>
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#60a5fa"></div>Email</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#34d399"></div>General Task</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#a78bfa"></div>Calendar</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#fb923c"></div>Feedback</div>
+</div>
+<div class="timeline-wrap"><div class="timeline">
+
+  <div class="phase-col">
+    <div class="phase-pill phase-manual">On Add to HiBob</div>
+    <div class="tasks">
+      <div class="task-card email-card"><div class="task-type-row"><div class="type-dot email-dot"></div><span class="type-label email-label">Email</span></div><div class="task-title">New Hire Start Announcement</div><div class="assignee-row"><span class="assignee-badge ab-manager">Manager</span></div></div>
+      <div class="task-card task-card-c"><div class="task-type-row"><div class="type-dot task-dot-c"></div><span class="type-label task-label">Task</span></div><div class="task-title">Post Offer in #hiring-updates</div><div class="assignee-row"><span class="assignee-badge ab-hrbp">HRBP</span></div></div>
+      <div class="task-card email-card"><div class="task-type-row"><div class="type-dot email-dot"></div><span class="type-label email-label">Email</span></div><div class="task-title">Welcome to Jetson! 🚀 (In-office)</div><div class="assignee-row"><span class="assignee-badge ab-employee">Employee</span></div></div>
+      <div class="task-card email-card"><div class="task-type-row"><div class="type-dot email-dot"></div><span class="type-label email-label">Email</span></div><div class="task-title">Welcome to Jetson! 🚀 (Remote)</div><div class="assignee-row"><span class="assignee-badge ab-employee">Employee</span></div></div>
+    </div>
+  </div>
+
+  <div class="arrow-wrap"><div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div></div>
+
+  <div class="phase-col">
+    <div class="phase-pill phase-pre7">7 Days Before</div>
+    <div class="tasks">
+      <div class="task-card cal-card"><div class="task-type-row"><div class="type-dot cal-dot"></div><span class="type-label cal-label">Calendar</span></div><div class="task-title">Day 1 Reminder — Calendar Invite</div><div class="assignee-row"><span class="assignee-badge ab-hrbp">HRBP</span><span class="assignee-badge ab-manager">Manager</span></div></div>
+      <div class="task-card task-card-c"><div class="task-type-row"><div class="type-dot task-dot-c"></div><span class="type-label task-label">Task</span></div><div class="task-title">Add to Benefit Plan</div><div class="assignee-row"><span class="assignee-badge ab-hrbp">HRBP</span><span class="assignee-badge ab-payroll">Payroll Manager</span></div></div>
+    </div>
+  </div>
+
+  <div class="arrow-wrap"><div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div></div>
+
+  <div class="phase-col">
+    <div class="phase-pill phase-pre5">5 Days Before</div>
+    <div class="tasks">
+      <div class="task-card task-card-c"><div class="task-type-row"><div class="type-dot task-dot-c"></div><span class="type-label task-label">Task</span></div><div class="task-title">New Hire Starts in 5 Days! Reminder</div><div class="assignee-row"><span class="assignee-badge ab-manager">Manager</span></div></div>
+    </div>
+  </div>
+
+  <div class="arrow-wrap"><div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div></div>
+
+  <div class="phase-col">
+    <div class="phase-pill phase-pre4">4 Days Before</div>
+    <div class="tasks">
+      <div class="task-card task-card-c"><div class="task-type-row"><div class="type-dot task-dot-c"></div><span class="type-label task-label">Task</span></div><div class="task-title">Schedule Day 1 Call</div><div class="assignee-row"><span class="assignee-badge ab-coord">P&T Coord</span></div></div>
+      <div class="task-card task-card-c"><div class="task-type-row"><div class="type-dot task-dot-c"></div><span class="type-label task-label">Task</span></div><div class="task-title">KW Office — Fob Tracking <span class="kw-tag">KW Only</span></div><div class="assignee-row"><span class="assignee-badge ab-coord">P&T Coord</span></div></div>
+    </div>
+  </div>
+
+  <div class="arrow-wrap"><div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div></div>
+
+  <div class="phase-col">
+    <div class="phase-pill phase-day1">Day 1 🎉</div>
+    <div class="tasks">
+      <div class="task-card task-card-c"><div class="task-type-row"><div class="type-dot task-dot-c"></div><span class="type-label task-label">Task</span></div><div class="task-title">Day 1 Call</div><div class="assignee-row"><span class="assignee-badge ab-coord">P&T Coord</span></div></div>
+      <div class="task-card email-card"><div class="task-type-row"><div class="type-dot email-dot"></div><span class="type-label email-label">Email</span></div><div class="task-title">Follow Up — Day 1 Call</div><div class="assignee-row"><span class="assignee-badge ab-employee">Employee</span></div></div>
+      <div class="task-card task-card-c"><div class="task-type-row"><div class="type-dot task-dot-c"></div><span class="type-label task-label">Task</span></div><div class="task-title">Day 1 — Admin Tasks</div><div class="assignee-row"><span class="assignee-badge ab-coord">P&T Coord</span></div></div>
+      <div class="task-card email-card"><div class="task-type-row"><div class="type-dot email-dot"></div><span class="type-label email-label">Email</span></div><div class="task-title">Add Employee to Float</div><div class="assignee-row"><span class="assignee-badge ab-han">Han Lee</span></div></div>
+      <div class="task-card task-card-c"><div class="task-type-row"><div class="type-dot task-dot-c"></div><span class="type-label task-label">Task</span></div><div class="task-title">Uniform Task</div><div class="assignee-row"><span class="assignee-badge ab-coord">P&T Coord</span></div></div>
+      <div class="task-card task-card-c"><div class="task-type-row"><div class="type-dot task-dot-c"></div><span class="type-label task-label">Task</span></div><div class="task-title">Day 1 Welcome Message Reminder</div><div class="assignee-row"><span class="assignee-badge ab-ta">Recruiter</span></div></div>
+    </div>
+  </div>
+
+  <div class="arrow-wrap"><div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div></div>
+
+  <div class="phase-col">
+    <div class="phase-pill phase-post5">End of Week 1</div>
+    <div class="tasks">
+      <div class="task-card task-card-c"><div class="task-type-row"><div class="type-dot task-dot-c"></div><span class="type-label task-label">Task</span></div><div class="task-title">Slack — Check In</div><div class="assignee-row"><span class="assignee-badge ab-hrbp">HRBP</span></div></div>
+      <div class="task-card task-card-c"><div class="task-type-row"><div class="type-dot task-dot-c"></div><span class="type-label task-label">Task</span></div><div class="task-title">EOW #1 Check In</div><div class="assignee-row"><span class="assignee-badge ab-ta">Recruiter</span></div></div>
+    </div>
+  </div>
+
+  <div class="arrow-wrap"><div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div></div>
+
+  <div class="phase-col">
+    <div class="phase-pill phase-post30">30 Days</div>
+    <div class="tasks">
+      <div class="task-card fb-card"><div class="task-type-row"><div class="type-dot fb-dot"></div><span class="type-label fb-label">Feedback</span></div><div class="task-title">30 Day Check In! 💬</div><div class="assignee-row"><span class="assignee-badge ab-employee">Employee</span></div></div>
+    </div>
+  </div>
+
+  <div class="arrow-wrap"><div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div></div>
+
+  <div class="phase-col">
+    <div class="phase-pill phase-post60">60 Days</div>
+    <div class="tasks">
+      <div class="task-card fb-card"><div class="task-type-row"><div class="type-dot fb-dot"></div><span class="type-label fb-label">Feedback</span></div><div class="task-title">60 Day Check In! 💬</div><div class="assignee-row"><span class="assignee-badge ab-employee">Employee</span></div></div>
+    </div>
+  </div>
+
+  <div class="arrow-wrap"><div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div></div>
+
+  <div class="phase-col">
+    <div class="phase-pill phase-post90">90 Days</div>
+    <div class="tasks">
+      <div class="task-card fb-card"><div class="task-type-row"><div class="type-dot fb-dot"></div><span class="type-label fb-label">Feedback</span></div><div class="task-title">90 Day Check In! 💬</div><div class="assignee-row"><span class="assignee-badge ab-employee">Employee</span></div></div>
+    </div>
+  </div>
+
+</div></div>
+</body>
+</html>
